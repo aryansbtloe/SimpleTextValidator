@@ -17,5 +17,7 @@
 + (BOOL)isValidZipcode:(NSString *)text;
 + (BOOL)isValidName:(NSString *)text;
 
++ (NSString *)formatPhoneNumber:(NSString *)text format:(NSString *)format error:(NSError**)error;
+
 
 @end

@@ -50,6 +50,47 @@
     return [predicate evaluateWithObject:text];
 }
 
++ (NSString *)formatPhoneNumber:(NSString *)text format:(NSString *)format error:(NSError**)error {
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[#]{1}"
+                                                                           options:NSRegularExpressionCaseInsensitive error:error];
+    NSUInteger numberOfMatches = [regex numberOfMatchesInString:format options:0 range:NSMakeRange(0, format.length)];
+    
+    if (numberOfMatches != 10) {
+        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
+        [errorDetail setValue:@"Format does not have 10 digit representations (i.e., \"#\")" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"eddieios" code:100 userInfo:errorDetail];
+        return @"";
+    }
+    
+    regex = [NSRegularExpression regularExpressionWithPattern:@"[0-9]{1}" options:0 error:error];    
+    NSArray *matches = [regex matchesInString:text options:0 range:NSMakeRange(0, text.length)];
+    NSMutableArray *numArray = [NSMutableArray arrayWithObjects:
+                                @"", @"", @"", @"", @"", @"", @"", @"", @"", @"",nil];
+    
+    for (int i = 0; i < matches.count; i++) {
+        NSTextCheckingResult *match = [matches objectAtIndex:i];
+        NSRange matchRange = [match range];
+        NSString *matchString = [text substringWithRange:matchRange];
+        [numArray insertObject:matchString atIndex:i];
+    }
+    
+    NSString *modifiedFormat = [format stringByReplacingOccurrencesOfString:@"#" withString:@"%@"];
+    NSString *formattedString = [NSString stringWithFormat:modifiedFormat,
+                                 [numArray objectAtIndex:0],
+                                 [numArray objectAtIndex:1],
+                                 [numArray objectAtIndex:2],
+                                 [numArray objectAtIndex:3],
+                                 [numArray objectAtIndex:4],
+                                 [numArray objectAtIndex:5],
+                                 [numArray objectAtIndex:6],
+                                 [numArray objectAtIndex:7],
+                                 [numArray objectAtIndex:8],
+                                 [numArray objectAtIndex:9]];
+    return formattedString;
+}
+
+
 
 
 @end

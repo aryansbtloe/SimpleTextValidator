@@ -39,7 +39,9 @@
     NSLog(@"2323eddie: isValidName: %d", [TextValidator isValidName:@"2323eddie"]);
 
     
-    
+    NSError *error = nil;
+    NSString *formattedNumber = [TextValidator formatPhoneNumber:@"917.222.333" format:@"+1(###)###-####" error:&error];
+    NSLog(@"917.222.3333 formatted to %@", formattedNumber);
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
